@@ -3,10 +3,12 @@ pipeline {
     stages {
         stage("build & SonarQube analysis") {
             steps {
-
-
-                    bat './gradlew test'
+                withSonarQubeEnv("SonarQube"){
+                     bat './gradlew test'
                     bat './gradlew sonar'
+                }
+
+
 
 
 
