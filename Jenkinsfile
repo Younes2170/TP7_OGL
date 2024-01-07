@@ -4,13 +4,21 @@ pipeline {
     stages {
         stage('Test') {
             steps {
+                // Step 1: Run unit tests
+                bat 'gradle test'
 
+                // Step 2: Archive test results
+                junit 'build/test-results/test/*.xml'
+
+                // Step 3: Generate Cucumber reports (assuming you have a Cucumber task)
+                bat 'gradle cucumber'
             }
         }
 
         stage('Code Analysis') {
             steps {
-
+                // Analyze code quality with SonarQube
+                bat 'gradle sonarqube'
             }
         }
 
@@ -49,7 +57,16 @@ pipeline {
     post {
         failure {
             script {
+                // Notify on pipeline failure
+                echo 'Sending failure notification to the development team...'
 
+                // Replace the following commands with your actual notification commands
+                // Assuming you have plugins or scripts to send notifications
+                // You may use email, Slack, Google Chrome, and Signal plugins
+                bat 'send_email_notification'
+                bat 'send_slack_notification'
+                bat 'send_chrome_notification'
+                bat 'send_signal_notification'
             }
         }
     }
