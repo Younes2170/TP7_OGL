@@ -4,59 +4,55 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                // Step 1: Lancement des tests unitaires.
-                sh 'gradle test'
+                // Step 1: Run unit tests
+                bat 'gradle test'
 
-                // Step 2: Archivage des résultats des tests unitaires.
+                // Step 2: Archive test results
                 junit 'build/test-results/test/*.xml'
 
-                // Step 3: Génération des rapports de tests Cucumber.
-                // Assuming you have a Cucumber task in your Gradle build script
-                sh 'gradle cucumber'
+                // Step 3: Generate Cucumber reports (assuming you have a Cucumber task)
+                bat 'gradle cucumber'
             }
         }
 
         stage('Code Analysis') {
             steps {
-                // Step: Analyser la qualité du code avec SonarQube.
-                sh 'gradle sonarqube'
+                // Analyze code quality with SonarQube
+                bat 'gradle sonarqube'
             }
         }
 
         stage('Code Quality') {
             steps {
-                // Step: Vérifier l'état de Quality Gates.
-                // Assuming you have a task to check Quality Gates status in your Gradle build script
-                sh 'gradle checkQualityGates'
+                // Verify Quality Gates status (replace with your actual task)
+                bat 'gradle checkQualityGates'
             }
         }
 
         stage('Build') {
             steps {
-                // Step 1: Génération du fichier Jar.
-                sh 'gradle build'
+                // Step 1: Build the Jar file
+                bat 'gradle build'
 
-                // Step 2: Génération de la documentation.
-                sh 'gradle javadoc'
+                // Step 2: Generate documentation
+                bat 'gradle javadoc'
 
-                // Step 3: Archivage du fichier Jar et de la documentation.
+                // Step 3: Archive Jar file and documentation
                 archiveArtifacts artifacts: 'build/libs/*.jar, build/docs/javadoc/**/*', fingerprint: true
             }
         }
 
         stage('Deploy') {
             steps {
-                // Step: Déployer le fichier Jar généré dans https://mymavenrepo.com/.
-                // Replace this with your actual deployment command
-                // For simplicity, let's assume copying the file to a destination
-                sh 'cp build/libs/*.jar /path/to/deployment/'
+                // Deploy the Jar file to a destination (replace with your actual deployment command)
+                bat 'xcopy /Y build\\libs\\*.jar C:\\path\\to\\deployment\\'
             }
         }
 
         stage('Notification') {
             steps {
                 script {
-                    // Notification for successful deployment
+                    // Notify on successful deployment
                     echo 'Sending success notification to the development team...'
 
                     // Add the notifyEvents step here
@@ -69,16 +65,16 @@ pipeline {
     post {
         failure {
             script {
-                // Notification for pipeline failure
+                // Notify on pipeline failure
                 echo 'Sending failure notification to the development team...'
 
                 // Replace the following commands with your actual notification commands
                 // Assuming you have plugins or scripts to send notifications
                 // You may use email, Slack, Google Chrome, and Signal plugins
-                sh 'send_email_notification'
-                sh 'send_slack_notification'
-                sh 'send_chrome_notification'
-                sh 'send_signal_notification'
+                bat 'send_email_notification'
+                bat 'send_slack_notification'
+                bat 'send_chrome_notification'
+                bat 'send_signal_notification'
             }
         }
     }
