@@ -31,13 +31,21 @@ pipeline {
 
         stage('Build') {
             steps {
+                // Step 1: Build the Jar file
+                bat 'gradle build'
 
+                // Step 2: Generate documentation
+                bat 'gradle javadoc'
+
+                // Step 3: Archive Jar file and documentation
+                archiveArtifacts artifacts: 'build/libs/*.jar, build/docs/javadoc/**/*', fingerprint: true
             }
         }
 
         stage('Deploy') {
             steps {
-
+                // Deploy the Jar file to a destination (replace with your actual deployment command)
+                bat 'xcopy /Y build\\libs\\*.jar C:\\path\\to\\deployment\\'
             }
         }
 
