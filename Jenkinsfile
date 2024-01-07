@@ -5,13 +5,9 @@ pipeline {
             steps {
                 withSonarQubeEnv("SonarQube"){
                      bat './gradlew test'
-                    bat './gradlew sonar'
+
                 }
-
-
-
-
-
+                bat './gradlew sonar'
 
             }
         }
